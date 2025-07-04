@@ -1,0 +1,30 @@
+{
+  "name": "dynamic-config-monorepo",
+  "version": "1.0.0",
+  "description": "CircleCI dynamic configuration for a Node.js monorepo.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "server": "nodemon server/index.js",
+    "client": "cd client && npm run dev",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/dannysantino/dynamic-config-monorepo.git"
+  },
+  "keywords": [
+    "circleci",
+    "ci/cd",
+    "monorep",
+    "node.js",
+    "dynamic-configuration"
+  ],
+  "author": "Danny Santino",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dannysantino/dynamic-config-monorepo/issues"
+  },
+  "homepage": "https://github.com/dannysantino/dynamic-config-monorepo#readme"
+}
