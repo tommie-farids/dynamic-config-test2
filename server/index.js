@@ -5,7 +5,6 @@ import mysql from "mysql"
 import cors from "cors"
 
 const app = express();
-const PORT = process.env.PORT || 8080
 
 const mysqlHost = process.env.MYSQL_HOST,
     mysqlUser = process.env.MYSQL_USER,
@@ -24,7 +23,6 @@ db.connect(err => {
         console.error(`Error connecting to MySQL database: ${err.stack}`);
         return
     }
-    app.listen(PORT, () => console.log(`Server listening on PORT ${PORT}`));
 });
 
 app.use(cors());
@@ -34,12 +32,10 @@ app.get("/", (req, res) => {
     res.json("Hello from the server!");
 });
 
-app.get("/products", (req, res) => {
-    let q = "SELECT * FROM products"
+app.get("/products", (_, res) => {
+    let q = "SELECT * FROM products";
     db.query(q, (err, results) => {
-        if (err) {
-            res.json(err.sqlMessage);
-        }
+        if (err) return res.status(500).json({ error: err.sqlMessage });
         res.json(results);
     });
 });
@@ -47,61 +43,43 @@ app.get("/products", (req, res) => {
 app.post("/products", (req, res) => {
     let { name, description, price, img } = req.body;
     let values = [name, description, price, img];
-    let q = "INSERT INTO products ('name', 'description', 'price', 'img') ?"
+    let q = "INSERT INTO products (`name`, `description`, `price`, `img`) VALUES (?)";
 
     db.query(q, [values], (err, result) => {
         if (err) {
-            res.json(err.sqlMessage);
+            console.error(err);
+            return res.status(500).json({ error: err.sqlMessage });
         }
         res.json(result);
     });
 });
 
 app.put("/products/:id", (req, res) => {
-    let productId = req.params.id;
+    let { id } = req.params;
     let { name, description, price, img } = req.body;
     let values = [name, description, price, img];
-    let q = "UPDATE products SET ('name'= ?, 'description'= ?, 'price'= ?, 'img'= ? WHERE id = ?"
+    let q = "UPDATE products SET `name` = ?, `description` = ?, `price` = ?, `img` = ? WHERE id = ?";
 
-    db.query(q, [...values, productId], (err, result) => {
+    db.query(q, [...values, id], (err, result) => {
         if (err) {
-            res.json(err.sqlMessage);
+            console.error(err);
+            return res.status(500).json({ error: err.sqlMessage });
         }
         res.json(result);
     });
 });
 
 app.delete("/products/:id", (req, res) => {
-    let productId = req.params.id;
-    let q = "DELETE FROM products WHERE id = ?"
+    let { id } = req.params;
+    let q = "DELETE FROM products WHERE id = ?";
 
-    db.query(q, [productId], (err, result) => {
-        if (err) {
-            res.json(err.sqlMessage);
-        }
+    db.query(q, [id], (err, result) => {
+        if (err) return res.status(500).json({ error: err.sqlMessage });
         res.json(result);
     });
 });
 
-
-// let q = "SHOW DATABASES LIKE 'carastoremini'";
-
-// db.query(q, (err, result) => {
-//     if (err) {
-//         console.error(`Error executing query: ${err.stack}`);
-//     }
-
-//     if (result.length == 0) {
-//         db.query("CREATE DATABASE carastoremini", (err, result) => {
-//             if (err) {
-//                 console.error(`Error creating database: ${err.stack}`);
-//             }
-//             console.log("Database created successfully");
-//             db.query("USE carastoremini", err => {
-//                 if (err) {
-//                     console.error(`Error selecting database: ${err.stack}`);
-//                 }
-//             });
-//         });
-//     }
-// });
+export {
+    app,
+    db
+};
