@@ -51,13 +51,13 @@ const Products = () => {
 
             <section id="products">
                 <div className="container mb-5">
-                    <div className="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
-                        {products.length == 0
+                    <div className="row row-cols-1 row-cols-md-3 g-4">
+                        {products.length === 0
                             ? <h3 className="text-center">No products available at this time. Please check back later!</h3>
                             : (
                                 products.map(product => (
-                                    <div className="col">
-                                        <div className="card h-100" key={product.id}>
+                                    <div className="col" key={product.id}>
+                                        <div className="card h-100">
                                             <img src={product.img} alt={product.name} className="card-img-top" />
                                             <div className="card-body">
                                                 <h5 className="card-title">{product.name}</h5>
