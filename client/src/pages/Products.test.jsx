@@ -36,21 +36,21 @@ describe("Products Page", () => {
         expect(screen.getByRole("heading", { name: /No products available at this time. Please check back later!/i })).toBeInTheDocument();
     });
 
-    // it("displays products when API call is successful", async () => {
-    //     const mockProducts = [
-    //         { id: 1, name: "Product 1", price: 237, description: "Test product 1", img: "https://imgurl.img1.jpg" },
-    //         { id: 2, name: "Product 2", price: 189, description: "Test product 2", img: "https://imgurl.img2.jpg" }
-    //     ];
+    it("displays products when API call is successful", async () => {
+        const mockProducts = [
+            { id: 1, name: "Product 1", price: 237, description: "Test product 1", img: "https://imgurl.img1.jpg" },
+            { id: 2, name: "Product 2", price: 189, description: "Test product 2", img: "https://imgurl.img2.jpg" }
+        ];
 
-    //     axios.get.mockResolvedValueOnce({ data: mockProducts });
+        axios.get.mockResolvedValueOnce({ data: mockProducts });
 
-    //     renderWithRouter(<Products />);
+        renderWithRouter(<Products />);
 
-    //     await waitFor(() => {
-    //         expect(screen.getByRole("heading", { name: /Product 1/i })).toBeInTheDocument();
-    //         expect(screen.getByRole("heading", { name: /Product 2/i })).toBeInTheDocument();
-    //     });
-    // });
+        await waitFor(() => {
+            expect(screen.getByRole("heading", { name: /Product 1/i })).toBeInTheDocument();
+            expect(screen.getByRole("heading", { name: /Product 2/i })).toBeInTheDocument();
+        });
+    });
 
     // it("deletes a product when the delete button is clicked", async () => {
     //     const mockProduct = [
