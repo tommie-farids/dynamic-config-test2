@@ -23,7 +23,7 @@ jobs:
 
   test-client:
     executor: node-exec
-      steps:
+    steps:
          - checkout
          - run: cd client && npm ci && npm test
 
