@@ -1,0 +1,40 @@
+version: 2.1
+
+parameters:
+  run-server-tests:
+    type: boolean
+    default: false
+  run-client-tests:
+    type: boolean
+    default: false
+
+executors:
+  node-exec:
+    docker:
+      - image: cimg/node:lts
+    working_directory: ~/
+
+jobs:
+  test-server:
+    executor: node-exec
+    steps:
+      - checkout
+      - run: cd server && npm ci && npm test
+
+  test-client:
+    executor: node-exec
+      steps:
+         - checkout
+         - run: cd client && npm ci && npm test
+
+workflows:
+  run-tests:
+    when:
+      or:
+        - << pipeline.parameters.run-server-tests >>
+        - << pipeline.parameters.run-client-tests >>
+    jobs:
+      - test-server:
+          unless: << pipeline.parameters.run-server-tests >>
+      - test-client:
+          unless: << pipeline.parameters.run-client-tests >>
