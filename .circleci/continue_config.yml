@@ -12,29 +12,39 @@ executors:
   node-exec:
     docker:
       - image: cimg/node:lts
-    working_directory: ~/
+    working_directory: ~/app
 
 jobs:
   test-server:
     executor: node-exec
     steps:
       - checkout
-      - run: cd server && npm ci && npm test
+      - run: cd server && npm ci
+      - run: npm test
+
+  build-client:
+    executor: node-exec
+    steps:
+      - checkout
+      - run: cd client && npm ci
+      - run: npm run build
 
   test-client:
     executor: node-exec
     steps:
-         - checkout
-         - run: cd client && npm ci && npm test
+      - checkout
+      - run: cd client && npm ci
+      - run: npm test
 
 workflows:
-  run-tests:
-    when:
-      or:
-        - << pipeline.parameters.run-server-tests >>
-        - << pipeline.parameters.run-client-tests >>
+  run-server-tests:
+    when: << pipeline.parameters.run-server-tests >>
     jobs:
-      - test-server:
-          unless: << pipeline.parameters.run-server-tests >>
+      - test-server
+  build-and-test-client:
+    when: << not pipeline.parameters.run-client-tests >>
+    jobs:
+      - build-client
       - test-client:
-          unless: << pipeline.parameters.run-client-tests >>
+          requires:
+            - build-client
