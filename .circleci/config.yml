@@ -11,8 +11,8 @@ workflows:
       - path-filtering/filter:
           name: detect-modified-directories
           mapping: |
-            server/.* run-server-tests true
-            client/.* run-client-tests true
-            .circleci/.* run-server-tests true
-            .circleci/.* run-client-tests true
+            server/.* run-server-jobs true
+            client/.* run-client-jobs true
+            .circleci/.* run-server-jobs true
+            .circleci/.* run-client-jobs true
           base-revision: dynamic_config

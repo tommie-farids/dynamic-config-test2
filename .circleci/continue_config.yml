@@ -1,10 +1,10 @@
 version: 2.1
 
 parameters:
-  run-server-tests:
+  run-server-jobs:
     type: boolean
     default: false
-  run-client-tests:
+  run-client-jobs:
     type: boolean
     default: false
 
@@ -12,37 +12,77 @@ executors:
   node-exec:
     docker:
       - image: cimg/node:lts
-    working_directory: ~/app
 
-jobs:
-  test-server:
-    executor: node-exec
+commands:
+  installdeps:
+    description: "Install dependencies"
+    parameters:
+      directory:
+        type: string
     steps:
       - checkout
-      - run: cd server && npm ci
-      - run: npm test
+          path: ~/project
+      - restore_cache:
+          keys:
+            - v1-<< parameters.directory >>-deps-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
+            - v1-<< parameters.directory >>-deps-{{ checksum "package.json" }}
+            - v1-<< parameters.directory >>-deps-
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - save_cache:
+          key: v1-<< parameters.directory >>-deps-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+
+jobs:
+  build-test-server:
+    docker:
+      - image: cimg/node:lts
+      - image: cimg/msql:8.0
+        environment:
+          MYSQL_HOST: $MYSQL_HOST
+          MYSQL_USER: $MYSQL_USER
+          MYSQL_PASSWORD: $MYSQL_PASSWORD
+          MYSQL_DATABASE: $MYSQL_DATABASE
+    working_directory: ~/project/server
+    steps:
+      - installdeps:
+          directory: server
+      - run:
+          name: Wait for MySQL
+          command: dockerize -wait tcp://localhost:3306 -timeout 1m
+      - run:
+          name: Run server tests
+          command: npm test
 
   build-client:
     executor: node-exec
+    working_directory: ~/project/client
     steps:
-      - checkout
-      - run: cd client && npm ci
-      - run: npm run build
+      - installdeps:
+          directory: client
+      - run:
+          name: Build client app
+          command: npm run build
 
   test-client:
     executor: node-exec
+    working_directory: ~/project/client
     steps:
-      - checkout
-      - run: cd client && npm ci
-      - run: npm test
+      - installdeps:
+          directory: client
+      - run:
+          name: Run client tests
+          command: npm test
 
 workflows:
-  run-server-tests:
-    when: << pipeline.parameters.run-server-tests >>
+  build-and-test-server:
+    when: << pipeline.parameters.run-server-jobs >>
     jobs:
-      - test-server
+      - build-test-server
   build-and-test-client:
-    when: << not pipeline.parameters.run-client-tests >>
+    when: << not pipeline.parameters.run-client-jobs >>
     jobs:
       - build-client
       - test-client:
