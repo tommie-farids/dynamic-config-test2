@@ -39,7 +39,7 @@ jobs:
   build-test-server:
     docker:
       - image: cimg/node:lts
-      - image: cimg/msql:8.0
+      - image: cimg/mysql:8.0
         environment:
           MYSQL_HOST: $MYSQL_HOST
           MYSQL_USER: $MYSQL_USER
