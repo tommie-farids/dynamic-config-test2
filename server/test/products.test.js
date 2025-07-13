@@ -7,6 +7,22 @@ chai.use(chaiHttp);
 
 const expect = chai.expect;
 
+before(done => {
+    const createTable = `
+        CREATE TABLE IF NOT EXISTS products (
+            id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            description VARCHAR(255) NOT NULL,
+            price INT NOT NULL,
+            img VARCHAR(255) NOT NULL
+        );
+    `
+    db.query(createTable, (err, result) => {
+        if (err) return done(err);
+        done();
+    });
+});
+
 after(done => {
     db.end();
     done();
