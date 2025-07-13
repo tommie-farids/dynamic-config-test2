@@ -20,7 +20,7 @@ commands:
       directory:
         type: string
     steps:
-      - checkout
+      - checkout:
           path: ~/project
       - restore_cache:
           keys:
