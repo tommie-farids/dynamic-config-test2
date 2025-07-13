@@ -8,7 +8,7 @@
     "server": "nodemon server/server.js",
     "client": "cd client && npm run dev",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "test": "cd server/ && npm test"
+    "test": "cd server/ && npm test && cd ../client/ && npm test"
   },
   "repository": {
     "type": "git",
