@@ -6,7 +6,7 @@ GRANT ALL ON carastoremini.* TO 'admin'@'localhost';
 
 FLUSH PRIVILEGES;
 
-DROP TABLE IF EXISTS;
+DROP TABLE IF EXISTS products;
 
 CREATE TABLE products(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
