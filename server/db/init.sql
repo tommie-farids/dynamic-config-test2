@@ -2,7 +2,7 @@ CREATE DATABASE IF NOT EXISTS carastoremini;
 
 USE carastoremini;
 
-GRANT ALL ON carastoremini.* TO 'admin'@'localhost';
+GRANT ALL ON carastoremini.* TO 'test_user'@'%';
 
 FLUSH PRIVILEGES;
 
