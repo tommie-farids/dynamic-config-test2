@@ -1,10 +1,10 @@
-FROM node:lts-alpine as base
+FROM node:lts-alpine AS base
 
 WORKDIR /usr/src/app
 
 EXPOSE 8080
 
-FROM base as dev
+FROM base AS dev
 
 RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=package-lock.json,target=package-lock.json \
@@ -15,7 +15,7 @@ USER node
 
 CMD ["npm", "run", "dev"]
 
-FROM base as prod
+FROM base AS prod
 
 RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=package-lock.json,target=package-lock.json \
