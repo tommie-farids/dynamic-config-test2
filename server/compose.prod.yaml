@@ -2,7 +2,7 @@ services:
   nodejs-server:
     build:
       target: prod
-    image: dynamic-config:prod
+    image: ${DOCKERHUB_USERNAME}/dynamic-config:latest
     container_name: dconfig-server-prod
     volumes: []
     restart: always
