@@ -1,0 +1,8 @@
+services:
+  nodejs-server:
+    build:
+      target: dev
+    image: nodejs-server:dev
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules

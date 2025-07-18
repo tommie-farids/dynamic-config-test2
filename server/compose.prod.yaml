@@ -1,0 +1,8 @@
+services:
+  nodejs-server:
+    build:
+      target: prod
+    image: nodejs-server:prod
+    container_name: nodejs_prod
+    volumes: []
+    restart: always
