@@ -4,6 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "dev": "nodemon --watch ./ --ext js,json --exec node server.js",
     "test": "mocha"
   },
   "keywords": [],
