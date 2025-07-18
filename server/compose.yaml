@@ -3,7 +3,7 @@ name: dynamic-config-monorepo
 services:
   mysql-db:
     image: mysql:8.0
-    container_name: mysql_container
+    container_name: mysql-container
     command: "--default-authentication-plugin=mysql_native_password"
     restart: always
     environment:
@@ -25,7 +25,6 @@ services:
   nodejs-server:
     build:
       context: .
-    container_name: nodejs_dev
     restart: on-failure:3
     environment:
       PORT: ${PORT}

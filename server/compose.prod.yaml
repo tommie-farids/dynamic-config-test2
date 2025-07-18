@@ -2,7 +2,7 @@ services:
   nodejs-server:
     build:
       target: prod
-    image: nodejs-server:prod
-    container_name: nodejs_prod
+    image: dynamic-config:prod
+    container_name: dconfig-server-prod
     volumes: []
     restart: always
