@@ -17,7 +17,7 @@
   "keywords": [
     "circleci",
     "ci/cd",
-    "monorep",
+    "monorepo",
     "node.js",
     "dynamic-configuration"
   ],
