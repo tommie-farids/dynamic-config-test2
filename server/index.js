@@ -23,6 +23,7 @@ db.connect(err => {
         console.error(`Error connecting to MySQL database: ${err.stack}`);
         return
     }
+    console.log("Database connected as ID:", db.threadId);
 });
 
 app.use(cors());
