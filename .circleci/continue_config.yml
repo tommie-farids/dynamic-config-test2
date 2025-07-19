@@ -86,8 +86,9 @@ jobs:
           command: |
             docker build -t $DOCKERHUB_USERNAME/dynamic-config:$IMAGE_TAG --target prod .
       - run:
-          name: Tag and push image to Docker Hub
+          name: Authenticate, tag, and push image to Docker Hub
           command: |
+            echo "$DOCKERHUB_PASSWORD" | docker login -u $DOCKERHUB_USERNAME --password-stdin
             docker tag $DOCKERHUB_USERNAME/dynamic-config:$IMAGE_TAG $DOCKERHUB_USERNAME/dynamic-config:latest
             docker push $DOCKERHUB_USERNAME/dynamic-config:$IMAGE_TAG
             docker push $DOCKERHUB_USERNAME/dynamic-config:latest
