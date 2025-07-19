@@ -36,7 +36,7 @@ commands:
             - node_modules
 
 jobs:
-  build-test-server:
+  test-server:
     docker:
       - image: cimg/node:lts
       - image: cimg/mysql:8.0
@@ -62,6 +62,34 @@ jobs:
       - run:
           name: Run server tests
           command: npm test
+  publish-server:
+    docker:
+      - image: cimg/base:current
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
+    working_directory: ~/project-server
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Set image tag
+          command: |
+            export IMAGE_TAG=$(cat package.json | grep --only-matching '"version": "[^"]*' | cut --delimiter='"' --fields=4)
+            echo "export IMAGE_TAG=$IMAGE_TAG" >> $BASH_ENV
+            echo "IMAGE_TAG: $IMAGE_TAG"
+            source $BASH_ENV
+      - run:
+          name: Build production image
+          command: |
+            docker build -t $DOCKERHUB_USERNAME/dynamic-config:$IMAGE_TAG --target prod .
+      - run:
+          name: Tag and push image to Docker Hub
+          command: |
+            docker tag $DOCKERHUB_USERNAME/dynamic-config:$IMAGE_TAG $DOCKERHUB_USERNAME/dynamic-config:latest
+            docker push $DOCKERHUB_USERNAME/dynamic-config:$IMAGE_TAG
+            docker push $DOCKERHUB_USERNAME/dynamic-config:latest
 
   build-client:
     executor: node-exec
@@ -84,10 +112,13 @@ jobs:
           command: npm test
 
 workflows:
-  build-and-test-server:
+  test-and-publish-server:
     when: << pipeline.parameters.run-server-jobs >>
     jobs:
-      - build-test-server
+      - test-server
+      - publish-server:
+          requires:
+            - test-server
   build-and-test-client:
     when: << not pipeline.parameters.run-client-jobs >>
     jobs:
