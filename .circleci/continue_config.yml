@@ -68,7 +68,7 @@ jobs:
         auth:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_PASSWORD
-    working_directory: ~/project-server
+    working_directory: ~/project/server
     steps:
       - checkout:
           path: ~/project
