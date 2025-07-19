@@ -70,7 +70,8 @@ jobs:
           password: $DOCKERHUB_PASSWORD
     working_directory: ~/project-server
     steps:
-      - checkout
+      - checkout:
+          path: ~/project
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
