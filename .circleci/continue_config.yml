@@ -77,7 +77,7 @@ jobs:
       - run:
           name: Set image tag
           command: |
-            export IMAGE_TAG=$(cat package.json | grep --only-matching '"version": "[^"]*' | cut --delimiter='"' --fields=4)
+            IMAGE_TAG=$(jq -r '.version' package.json)
             echo "export IMAGE_TAG=$IMAGE_TAG" >> $BASH_ENV
             echo "IMAGE_TAG: $IMAGE_TAG"
             source $BASH_ENV
