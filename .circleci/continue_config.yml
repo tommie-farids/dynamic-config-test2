@@ -11,7 +11,7 @@ parameters:
 executors:
   node-exec:
     docker:
-      - image: cimg/node:lts
+      - image: cimg/node:22.17
 
 commands:
   installdeps:
@@ -38,7 +38,7 @@ commands:
 jobs:
   test-server:
     docker:
-      - image: cimg/node:lts
+      - image: cimg/node:22.17
       - image: cimg/mysql:8.0
         environment:
           MYSQL_ROOT_PASSWORD: djs0_32
