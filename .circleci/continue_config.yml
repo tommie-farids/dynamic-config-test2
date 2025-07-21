@@ -65,9 +65,6 @@ jobs:
   publish-server:
     docker:
       - image: cimg/base:current
-        auth:
-          username: $DOCKERHUB_USERNAME
-          password: $DOCKERHUB_PASSWORD
     working_directory: ~/project/server
     steps:
       - checkout:
