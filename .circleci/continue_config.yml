@@ -36,6 +36,26 @@ commands:
             - node_modules
 
 jobs:
+  build-client:
+    executor: node-exec
+    working_directory: ~/project/client
+    steps:
+      - installdeps:
+          directory: client
+      - run:
+          name: Build client app
+          command: npm run build
+
+  test-client:
+    executor: node-exec
+    working_directory: ~/project/client
+    steps:
+      - installdeps:
+          directory: client
+      - run:
+          name: Run client tests
+          command: npm test
+
   test-server:
     docker:
       - image: cimg/node:22.17
@@ -50,7 +70,7 @@ jobs:
           name: Wait for MySQL
           command: dockerize -wait tcp://localhost:3306 -timeout 1m
       - run:
-          name: Install MySQL client; Set user authentication
+          name: Install MySQL client
           command: |
             sudo apt-get update
             sudo apt-get install default-mysql-client
@@ -89,26 +109,6 @@ jobs:
             docker tag $DOCKERHUB_USERNAME/dynamic-config:$IMAGE_TAG $DOCKERHUB_USERNAME/dynamic-config:latest
             docker push $DOCKERHUB_USERNAME/dynamic-config:$IMAGE_TAG
             docker push $DOCKERHUB_USERNAME/dynamic-config:latest
-
-  build-client:
-    executor: node-exec
-    working_directory: ~/project/client
-    steps:
-      - installdeps:
-          directory: client
-      - run:
-          name: Build client app
-          command: npm run build
-
-  test-client:
-    executor: node-exec
-    working_directory: ~/project/client
-    steps:
-      - installdeps:
-          directory: client
-      - run:
-          name: Run client tests
-          command: npm test
 
 workflows:
   test-and-publish-server:
